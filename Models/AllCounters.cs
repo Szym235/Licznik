@@ -25,12 +25,9 @@ namespace Licznik.Models
                 XmlElement root = document.DocumentElement;
                 foreach (XmlNode node in root.ChildNodes)
                 {
-                    Counter counter = new Counter();
-                    counter.Name = node.Attributes["Name"].Value;
-
-                    if (node.Attributes["Color"] != null) counter.ColorName = node.Attributes["Color"].Value;
-                    else counter.ColorName = "White";
-
+                    Counter counter = new Counter(int.Parse(getAttributeIfExists(node, "DefaultValue", "0")));
+                    counter.Name = getAttributeIfExists(node, "Name", "");
+                    counter.ColorName = getAttributeIfExists(node, "Color", "White");
                     counter.Value = int.Parse(node.InnerText);
                     Debug.WriteLine("Added " + counter.Name + " with value " + counter.Value);
                     Counters.Add(counter);
@@ -42,10 +39,16 @@ namespace Licznik.Models
             Debug.WriteLine("Command binded");
         }
 
+        private string getAttributeIfExists(XmlNode node, String name, String defaultValue)
+        {
+            if (node.Attributes[name] != null) return node.Attributes[name].Value;
+            else return defaultValue;
+        }
+
         private void addCounter()
         {
             Debug.WriteLine("AddStart");
-            Counters.Add(new Counter { Value = defaultCounterValue });
+            Counters.Add(new Counter(defaultCounterValue));
             Debug.WriteLine("AddEnd");
             Debug.WriteLine(Counters.Count);
         }
@@ -61,6 +64,7 @@ namespace Licznik.Models
                 newCounter.InnerText = counter.Value.ToString();
                 newCounter.Attributes.Append(document.CreateAttribute("Name")).Value = counter.Name;
                 newCounter.Attributes.Append(document.CreateAttribute("Color")).Value= counter.ColorName;
+                newCounter.Attributes.Append(document.CreateAttribute("DefaultValue")).Value = counter.DefaultValue.ToString();
                 root.AppendChild(newCounter);
             }
             document.Save(Path.Combine(FileSystem.AppDataDirectory, "CountersSaveFile.xml"));

@@ -21,6 +21,20 @@ namespace Licznik.Models
             }
         }
 
+        private int _defaultValue;
+        public int DefaultValue
+        {
+            get { return _defaultValue; }
+            set
+            {
+                if (_defaultValue != value)
+                {
+                    _defaultValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private string _colorName;
         public string ColorName
         {
@@ -90,12 +104,16 @@ namespace Licznik.Models
 
         public ICommand IncrementCommand { get; }
         public ICommand DecrementCommand { get; }
+        public ICommand ReverseToDefaultCommand { get; }
 
-        public Counter()
+        public Counter(int DefaultValue)
         {
             IncrementCommand = new Command(Increment);
             DecrementCommand = new Command(Decrement);
+            ReverseToDefaultCommand = new Command(ReverseToDefault);
             ColorName = "White";
+            this.DefaultValue = DefaultValue;
+            Value = DefaultValue;
         }
         private void Increment()
         {
@@ -109,6 +127,11 @@ namespace Licznik.Models
             Value--;
             System.Diagnostics.Debug.WriteLine("Decremented");
             System.Diagnostics.Debug.WriteLine(Value);
+        }
+
+        private void ReverseToDefault()
+        {
+            Value = DefaultValue;
         }
     }
 }

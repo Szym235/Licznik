@@ -33,5 +33,12 @@ namespace Licznik.Views
                 }
             }
         }
+
+        public void Delete_Clicked(object sender, EventArgs e)
+        {
+            AllCounters allCounters = BindingContext as AllCounters;
+            Counter counter = (sender as Button).BindingContext as Counter;
+            allCounters.Counters.Remove(counter);
+        }
     }
 }
