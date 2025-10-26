@@ -21,7 +21,7 @@
                         <HorizontalStackLayout Spacing="20">
                             <Entry Text="{Binding Name}" TextChanged="autoSave" WidthRequest="100"></Entry>
                             <Picker SelectedItem="{Binding ColorName}" Title="Pick color">
-                                <Picker.ItemsSource>//elements
+                                <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
                                         <x:String>White</x:String>
                                         <x:String>Red</x:String>
